@@ -1,0 +1,38 @@
+body {
+    margin: 0;
+    background-color: #f6f9fc;
+}
+
+.header {
+    background-color: #ffffff;
+    width: calc(100% - 40px);
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+}
+
+.header-title {
+    margin: 0;
+    padding: 10px;
+    color: #525f7f;
+    font-size: 20px;
+    flex: 1;
+}
+
+.header-info {
+    margin: 0;
+    padding: 10px;
+    color: #525f7f;
+    font-size: 14px;
+    float: right;
+    font-weight: 400;
+}
+
+.logs {
+    background-color: #ffffff;
+    border: solid 1px rgba(0,0,0,0.1);
+    position: absolute;
+    bottom: 0;
+    width: calc(100% - 40px);
+    padding: 12px 20px;
+}
