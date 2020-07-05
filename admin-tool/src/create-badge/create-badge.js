@@ -1,15 +1,9 @@
-var contract;
-
+/* Maybe use this in connect.js
 async function setHeaderInfo() {
-    var accounts = await window.web3.eth.getAccounts();
+    var accounts = await web3.eth.getAccounts();
     const headerInfo = document.getElementById('headerInfo');
-    headerInfo.innerHTML = `(${await window.web3.eth.net.getNetworkType()}): ${accounts[0]}`
-    await web3.eth.net.getId().then((id) => {
-        contract = new web3.eth.Contract(contractJson.abi, contractJson.networks[id].address);
-        console.log(contract);
-    });
+    headerInfo.innerHTML = `(${await web3.eth.net.getNetworkType()}): ${accounts[0]}`
 }
-
 async function init() {
     setHeaderInfo()
     ethereum.on("accountsChanged", setHeaderInfo);
@@ -18,19 +12,11 @@ async function init() {
     ethereum.on("chainIdChanged", setHeaderInfo);
     ethereum.autoRefreshOnNetworkChange = false;
 }
+window.onload = init(); */
 
-window.onload = async function () {
-    const ethEnabled = () => {
-        if (window.ethereum) {
-            window.web3 = new Web3(Web3.givenProvider);
-            window.ethereum.enable();
-            return true;
-        }
-        return false;
-    }
-    if (!ethEnabled()) {
-        alert("Please install an Ethereum-compatible browser or extension like MetaMask to use this dApp!");
-    } else {
-        init();
-    }
-};
+/*
+    Na connecten met een wallet heb je hier toegang tot:
+        contract    -> Het contract object gemaakt met web3
+        web3        -> Web3 instance
+        accounts    -> array of accounts
+*/
