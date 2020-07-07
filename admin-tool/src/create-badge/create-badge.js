@@ -8,7 +8,7 @@ function createBadgeElement(badgeJson) {
     badge.classList.add("badge-item")
     badge.innerHTML = `
 <h1 class="badge-header"> ${badgeJson.name}</h1>
-<div class="badge-image" style="background-image: url('https://larsmeulenbroek.github.io/Koios-Badges/admin-tool/assets/images/badge-gold.png')"></div>
+<div class="badge-image" style="background-image: url(${badgeJson.image})"></div>
 <p class="badge-description">${badgeJson.description}</p>
 `
 
@@ -37,7 +37,7 @@ async function getBadges() {
     console.log(totalBadges);
 
     // TODO remove next line
-    totalBadges = 3;
+    totalBadges = 7;
 
     for (var i = 1; i <= totalBadges; i++) {
         var uri = await contract.methods.uri(i).call();
