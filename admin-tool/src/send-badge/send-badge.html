@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../KoiosBadges.js"></script>
+    <script src="../web3browserify.js"></script>
+    <script src="../connect.js"></script>
+    <script src="./send-badge.js"></script>
+    <link rel="stylesheet" href="./send-badge.css">
+</head>
+<body>
+    <h1>Send badges</h1>
+
+    <ul>
+        <li>
+            <div>
+                <img class="icon" src="../assets/images/badge-gold.png">
+                <div>
+                    <h3>Gold badge</h3>
+                    <p>Hier kan dan een soort description</p>
+                </div>
+                <div>
+                    <form>
+                        <label>
+                            To:
+                            <input type="text">
+                        </label>
+                        <button type="button" onclick="sendBadge(1)">SEND</button>
+                    </form>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div>
+                <img class="icon" src="../assets/images/badge-silver.png">
+                <div>
+                    <h3>Silver badge</h3>
+                    <p>Hier kan dan een soort description</p>
+                </div>
+                <div>
+                    <form>
+                        <label>
+                            To:
+                            <input type="text">
+                        </label>
+                        <button type="button">SEND</button>
+                    </form>
+                </div>
+            </div>
+        </li>
+    </ul>
+
+</body>
+</html>
