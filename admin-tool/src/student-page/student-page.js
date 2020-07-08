@@ -1,8 +1,26 @@
 const infuraKey = "37a4c5643fe0470c944325f1e9e12d50";
 var accounts, contract, web3, isCreator;
 
+
 async function getBadgeBalance(badgeId) {
     return await contract.methods.balanceOf(accounts[0], badgeId).call();
+}
+
+async function reloadBadges() {
+    var totalBadges = await contract.methods.nonce().call();
+
+    for (var i = 1; i <= totalBadges; i++) {
+        var balance = await contract.methods.balanceOf(accounts[0], i).call();
+        var badge = document.getElementById(i.toString())
+
+        if (badge !== undefined) {
+            if (parseInt(balance) === 0) {
+                badge.style.opacity = 0.5;
+            } else {
+                badge.style.opacity = 1;
+            }
+        }
+    }
 }
 
 function createBadgeElement(badgeJson, badgeId) {
@@ -12,18 +30,19 @@ function createBadgeElement(badgeJson, badgeId) {
         var badge = document.createElement("div");
         badge.id = badgeId.toString();
         badge.classList.add("badge-item");
-        badge.onclick = function () { toggleSendForm(badge) }
+        // check if student has a badge
         badge.innerHTML = `
 <h1 class="badge-header"> ${badgeJson.name}</h1>
-<div class="badge-image" style="background-image: url(${badgeJson.image})"></div>
-<p class="badge-balance">(${balance})</p>
+<div class="badge-image " style="background-image: url(${badgeJson.image})"></div>
 <p class="badge-description">${badgeJson.description}</p>
-<form id="sendBadgeForm" class="send-badge-form">
-<hr>
-<label class="to-address-input">To address:<input type="text" autofocus></label>
-<button type="button" onclick="sendBadge(${badgeId})" class="send-badge-btn">SEND</button>
-</form>
-`
+`;
+
+        if (parseInt(balance) === 0) {
+            badge.style.opacity = 0.5;
+        } else {
+            badge.style.opacity = 1;
+        }
+
         list.appendChild(badge)
     });
 
@@ -49,12 +68,8 @@ async function getBadges() {
     var totalBadges = await contract.methods.nonce().call();
 
     for (var i = 1; i <= totalBadges; i++) {
-        var tokenCreator = await contract.methods.tokenCreator(i).call();
-        // check if current account is the creator of the tokens
-        if (tokenCreator === accounts[0]) {
-            var uri = await contract.methods.uri(i).call();
-            getBadgeContent(uri, i);
-        }
+        var uri = await contract.methods.uri(i).call();
+        getBadgeContent(uri, i);
     }
 }
 
@@ -63,13 +78,6 @@ async function setHeaderInfo() {
     headerInfo.innerHTML = `(${await web3.eth.net.getNetworkType()}): ${accounts[0]}`;
 }
 
-async function createBadge() {
-    await contract.methods.create(10).send({from: accounts[0]})
-}
-
-function log(str) {
-    document.getElementById("log").innerHTML += '<p>' + str + '</p>';
-}
 
 providerOptions = {
     walletconnect: {
@@ -100,31 +108,9 @@ async function onConnect(provider) {
         accounts = await web3.eth.getAccounts();
         contract = await new web3.eth.Contract(contractJson.abi, contractJson.networks[4].address);
         isCreator = await contract.methods.creators(accounts[0]).call();
-        if (isCreator) {
-            var div = document.getElementById("createBadge");
-
-            div.innerHTML = `<h4 class="create-badge-header">Create new Badge</h4>
-        <button class="create-badge-btn" onclick="createBadge()">Create Badge</button>`
-        }
         setHeaderInfo();
         getBadges();
     }
 }
 
 document.addEventListener('DOMContentLoaded', init)
-
-function toggleSendForm(badge) {
-    var show = badge.lastElementChild.style.display;
-    if (show == "none") {
-        badge.lastElementChild.style.display = "block"
-        badge.lastElementChild.children[1].firstElementChild.focus();
-    } else {
-        badge.lastElementChild.style.display = "none"
-    }
-}
-
-function sendBadge(badgeId) {
-    var address = document.getElementById(badgeId).lastElementChild[0].value;
-    //or something like this
-    contract.methods.mint(badgeId, address).send({ from: accounts[0] })
-}
