@@ -91,18 +91,13 @@ body {
     font-size: 14px;
 }
 
-.send-badge-form {
-    display: none;
-    color: #525f7f;
-    font-size: 14px;
-}
 .create-badge-header {
     color: #525f7f;
     font-size: 16px;
     text-transform: uppercase;
 }
 
-.create-badge-btn {
+.create-badge-btn, .send-badge-btn {
     background-color: #525f7f;
     padding: 10px 12px;
     color: white;
@@ -114,6 +109,18 @@ body {
     transition: 200ms;
 }
 
-.create-badge-btn:hover {
+.create-badge-btn:hover, .send-badge-btn:hover {
     box-shadow: 0 10px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
+}
+
+.send-badge-form {
+    display: none;
+    color: #525f7f;
+    font-size: 14px;
+}
+
+.to-address-input input {
+    height: 25px;
+    margin: auto;
+    margin-bottom: 5px;
 }

@@ -20,8 +20,8 @@ function createBadgeElement(badgeJson, badgeId) {
 <p class="badge-description">${badgeJson.description}</p>
 <form id="sendBadgeForm" class="send-badge-form">
 <hr>
-<label>To address:<input type="text" autofocus></label>
-<button type="button" onclick="sendBadge(${badgeId})">SEND</button>
+<label class="to-address-input">To address:<input type="text" autofocus></label>
+<button type="button" onclick="sendBadge(${badgeId})" class="send-badge-btn">SEND</button>
 </form>
 `
         list.appendChild(badge)
@@ -120,7 +120,6 @@ function toggleSendForm(badge) {
 }
 
 function sendBadge(badgeId) {
-    console.log(badgeId);
-    var badge = document.getElementById(badgeId).lastElementChild;
-    debugger
+    var address = document.getElementById(badgeId).lastElementChild[0].value;
+    contract.methods.mint(badgeId, address).send({ from: accounts[0] })
 }
