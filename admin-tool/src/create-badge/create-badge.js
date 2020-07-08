@@ -11,12 +11,18 @@ function createBadgeElement(badgeJson, badgeId) {
 
         var badge = document.createElement("div");
         badge.id = badgeId.toString();
-        badge.classList.add("badge-item")
+        badge.classList.add("badge-item");
+        badge.onclick = function () { toggleSendForm(badge) }
         badge.innerHTML = `
 <h1 class="badge-header"> ${badgeJson.name}</h1>
 <div class="badge-image" style="background-image: url(${badgeJson.image})"></div>
 <p class="badge-balance">(${balance})</p>
 <p class="badge-description">${badgeJson.description}</p>
+<form id="sendBadgeForm" class="send-badge-form">
+<hr>
+<label>To address:<input type="text" autofocus></label>
+<button type="button" onclick="sendBadge(${badgeId})">SEND</button>
+</form>
 `
         list.appendChild(badge)
     });
@@ -104,4 +110,18 @@ async function onConnect(provider) {
 
 document.addEventListener('DOMContentLoaded', init)
 
+function toggleSendForm(badge) {
+    var show = badge.lastElementChild.style.display;
+    if (show == "none") {
+        badge.lastElementChild.style.display = "block"
+        badge.lastElementChild.children[1].firstElementChild.focus();
+    } else {
+        badge.lastElementChild.style.display = "none"
+    }
+}
 
+function sendBadge(badgeId) {
+    console.log(badgeId);
+    var badge = document.getElementById(badgeId).lastElementChild;
+    debugger
+}
