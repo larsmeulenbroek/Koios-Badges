@@ -1,5 +1,5 @@
 const infuraKey = "37a4c5643fe0470c944325f1e9e12d50";
-var accounts, contract, web3, isAdmin;
+var accounts, contract, web3, isCreator;
 
 async function getBadgeBalance(badgeId) {
     return await contract.methods.balanceOf(accounts[0], badgeId).call();
@@ -46,10 +46,7 @@ function getBadgeContent(url, badgeId) {
 
 async function getBadges() {
     console.log(contract);
-    var totalBadges = await contract.methods.nonce().call()
-
-    // TODO remove next line
-    totalBadges = 7;
+    var totalBadges = await contract.methods.nonce().call();
 
     for (var i = 1; i <= totalBadges; i++) {
         var uri = await contract.methods.uri(i).call();
@@ -58,16 +55,11 @@ async function getBadges() {
 }
 
 async function setHeaderInfo() {
-    await contract.methods.creators(accounts[0]).call().then((bool) => {
-        isAdmin = bool;
-    });
-
     const headerInfo = document.getElementById('headerInfo');
     headerInfo.innerHTML = `(${await web3.eth.net.getNetworkType()}): ${accounts[0]}`;
 }
 
 async function createBadge() {
-    console.log("test");
     await contract.methods.create(10).send({from: accounts[0]})
 }
 
@@ -103,6 +95,13 @@ async function onConnect(provider) {
     } else {
         accounts = await web3.eth.getAccounts();
         contract = await new web3.eth.Contract(contractJson.abi, contractJson.networks[4].address);
+        isCreator = await contract.methods.creators(accounts[0]).call();
+        if(isCreator) {
+            var div = document.getElementById("createBadge");
+
+            div.innerHTML = `<h4 class="create-badge-header">Create new Badge</h4>
+        <button class="create-badge-btn" onclick="createBadge()">Create Badge</button>`
+        }
         setHeaderInfo();
         getBadges();
     }
