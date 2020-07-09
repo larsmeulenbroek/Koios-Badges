@@ -5,3 +5,4 @@ build/
 
 .infura
 .secret
+.DS_Store

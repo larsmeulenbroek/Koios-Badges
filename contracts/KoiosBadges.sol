@@ -31,11 +31,11 @@ contract KoiosBadges is IERC1155, ERC165, CommonConstants, ERC1155Metadata_URI, 
     return false;
   }
 
-  string private baseURI;
   uint256 public nonce;
 
   mapping(address => bool) public creators;
   mapping(uint256 => address) public tokenCreator;
+  mapping(uint256 => string) public tokenURI;
 
   modifier creatorOnly() {
     require(creators[msg.sender], "You are not a creator");
@@ -47,12 +47,12 @@ contract KoiosBadges is IERC1155, ERC165, CommonConstants, ERC1155Metadata_URI, 
     _;
   }
 
-  constructor(string memory _baseURI) public {
-    baseURI = _baseURI;
+  constructor() public {
     owner = msg.sender;
+    addCreator(msg.sender);
   }
 
-  function addCreator(address _address) external ownerOnly {
+  function addCreator(address _address) public ownerOnly {
     creators[_address] = true;
   }
 
@@ -60,46 +60,37 @@ contract KoiosBadges is IERC1155, ERC165, CommonConstants, ERC1155Metadata_URI, 
     creators[_address] = false;
   }
 
-  function create(uint256 _initialSupply) public creatorOnly returns(uint256 _id) {
+  function create(uint256 _initialSupply, string memory _uri) public creatorOnly returns(uint256 _id) {
 
     _id = ++nonce;
     tokenCreator[_id] = msg.sender;
     balances[_id][msg.sender] = _initialSupply;
+    tokenURI[_id] = _uri;
 
     // Transfer event with mint semantic
     emit TransferSingle(msg.sender, address(0x0), msg.sender, _id, _initialSupply);
 
-    emit URI(baseURI, _id);
+    emit URI(_uri, _id);
   }
 
   // Batch mint tokens. Assign directly to _to[].
-  function mint(uint256 _id, address[] memory _to, uint256[] memory _quantities) public tokenCreatorOnly(_id) {
+  function mint(uint256 _id, address _to) public tokenCreatorOnly(_id) {
 
-    for (uint256 i = 0; i < _to.length; ++i) {
+    balances[_id][_to].add(1);
+    emit TransferSingle(msg.sender, address(0x0), _to, _id, 1);
 
-      address to = _to[i];
-      uint256 quantity = _quantities[i];
-
-      // Grant the items to the caller
-      balances[_id][to] = quantity.add(balances[_id][to]);
-
-      // Emit the Transfer/Mint event.
-      // the 0x0 source address implies a mint
-      // It will also provide the circulating supply info.
-      emit TransferSingle(msg.sender, address(0x0), to, _id, quantity);
-
-      if (to.isContract()) {
-        _doSafeTransferAcceptanceCheck(msg.sender, msg.sender, to, _id, quantity, '');
-      }
+    if (_to.isContract()) {
+      _doSafeTransferAcceptanceCheck(msg.sender, msg.sender, _to, _id, 1, '');
     }
   }
 
-  function setBaseURI(string memory _url) public ownerOnly {
-    baseURI = _url;
+  function updateUri(string memory _uri, uint256 _id) public tokenCreatorOnly(_id) {
+    tokenURI[_id] = _uri;
+    emit URI(_uri, _id);
   }
 
   function uri(uint256 tokenId) public view override returns (string memory) {
-    return string(abi.encodePacked(baseURI, toString(tokenId)));
+    return string(abi.encodePacked(tokenURI[tokenId]));
   }
 
   /////////////////////////////////////////// ERC1155 //////////////////////////////////////////////
@@ -261,28 +252,5 @@ contract KoiosBadges is IERC1155, ERC165, CommonConstants, ERC1155Metadata_URI, 
     // If you want predictable revert reasons consider using low level _to.call() style instead so the revert does not bubble up and you can revert yourself on the ERC1155_BATCH_ACCEPTED test.
     require(ERC1155TokenReceiver(_to).onERC1155BatchReceived(_operator, _from, _ids, _values, _data) == ERC1155_BATCH_ACCEPTED, "contract returned an unknown value from onERC1155BatchReceived");
   }
-
-  function toString(uint256 value) internal pure returns (string memory) {
-        // Inspired by OraclizeAPI's implementation - MIT licence
-        // https://github.com/oraclize/ethereum-api/blob/b42146b063c7d6ee1358846c198246239e9360e8/oraclizeAPI_0.4.25.sol
-
-        if (value == 0) {
-            return "0";
-        }
-        uint256 temp = value;
-        uint256 digits;
-        while (temp != 0) {
-            digits++;
-            temp /= 10;
-        }
-        bytes memory buffer = new bytes(digits);
-        uint256 index = digits - 1;
-        temp = value;
-        while (temp != 0) {
-            buffer[index--] = byte(uint8(48 + temp % 10));
-            temp /= 10;
-        }
-        return string(buffer);
-    }
 }
 
