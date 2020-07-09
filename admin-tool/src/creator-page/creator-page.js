@@ -20,7 +20,7 @@ function createBadgeElement(badgeJson, badgeId) {
 <p class="badge-description">${badgeJson.description}</p>
 <form id="sendBadgeForm" class="send-badge-form">
 <hr>
-<label class="to-address-input">To address:<input type="text" autofocus></label>
+<input class="input-field" type="text" placeholder="address" autofocus></label>
 <button type="button" onclick="sendBadge(${badgeId})" class="send-badge-btn">SEND</button>
 </form>
 `
@@ -117,11 +117,8 @@ async function onConnect(provider) {
         accounts = await web3.eth.getAccounts();
         contract = await new web3.eth.Contract(contractJson.abi, contractJson.networks[4].address);
         isCreator = await contract.methods.creators(accounts[0]).call();
-        if (isCreator) {
-            var div = document.getElementById("createBadge");
-
-            div.innerHTML = `<h4 class="create-badge-header">Create new Badge</h4>
-        <button class="create-badge-btn" onclick="createBadge()">Create Badge</button>`
+        if(!isCreator) {
+            location.href - 'student-page.html';
         }
         setHeaderInfo();
         getBadges();

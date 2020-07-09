@@ -108,6 +108,9 @@ async function onConnect(provider) {
         accounts = await web3.eth.getAccounts();
         contract = await new web3.eth.Contract(contractJson.abi, contractJson.networks[4].address);
         isCreator = await contract.methods.creators(accounts[0]).call();
+        if(isCreator) {
+            location.href - 'creator-page.html';
+        }
         setHeaderInfo();
         getBadges();
     }
