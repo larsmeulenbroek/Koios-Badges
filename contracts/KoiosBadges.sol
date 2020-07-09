@@ -90,7 +90,7 @@ contract KoiosBadges is IERC1155, ERC165, CommonConstants, ERC1155Metadata_URI, 
   }
 
   function uri(uint256 tokenId) public view override returns (string memory) {
-    return string(abi.encodePacked(tokenLocation[tokenId]));
+    return string(abi.encodePacked(tokenURI[tokenId]));
   }
 
   /////////////////////////////////////////// ERC1155 //////////////////////////////////////////////
