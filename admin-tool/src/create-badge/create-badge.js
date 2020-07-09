@@ -64,6 +64,21 @@ async function setHeaderInfo() {
 }
 
 async function createBadge() {
+    const form = document.getElementById("createBadgeForm");
+    var newBadge = {};
+    for (var i = 0; i < form.children.length - 1; i++) {
+        if (form[i].localName == "input") {
+            var key = form[i].id
+            var value = form[i].value
+            newBadge[key] = value;
+        }
+    }
+
+    for await (const result of ipfs.add(JSON.stringify(newBadge))) {
+        console.log(result.path);
+    }
+
+    // TODO: send url to newly created badge
     await contract.methods.create(10).send({from: accounts[0]})
 }
 
@@ -81,6 +96,8 @@ providerOptions = {
 };
 
 async function init() {
+    ipfs = await window.Ipfs.create();
+
     web3modal = new Web3Modal.default({
         network: "rinkeby",
         providerOptions,
