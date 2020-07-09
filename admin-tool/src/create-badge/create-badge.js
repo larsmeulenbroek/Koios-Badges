@@ -79,7 +79,7 @@ async function createBadge() {
     }
 
     // TODO: send url to newly created badge
-    await contract.methods.create(10).send({from: accounts[0]})
+    await contract.methods.create(10, uri).send({from: accounts[0]})
 }
 
 function log(str) {
@@ -142,6 +142,5 @@ function toggleSendForm(badge) {
 
 function sendBadge(badgeId) {
     var address = document.getElementById(badgeId).lastElementChild[0].value;
-    //or something like this
     contract.methods.mint(badgeId, address).send({ from: accounts[0] })
 }
