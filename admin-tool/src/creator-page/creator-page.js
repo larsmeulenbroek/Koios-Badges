@@ -5,6 +5,20 @@ async function getBadgeBalance(badgeId) {
     return await contract.methods.balanceOf(accounts[0], badgeId).call();
 }
 
+function selectBadge(selectedId) {
+    var badges = Array.from(document.getElementById("badgeList").children);
+
+    badges.forEach(function (badge) {
+        if (badge.id !== selectedId) {
+            badge.classList.remove("badge-selected");
+        } else {
+            badge.classList.add("badge-selected");
+        }
+    })
+
+
+}
+
 function createBadgeElement(badgeJson, badgeId) {
     getBadgeBalance(badgeId).then((balance) => {
         var list = document.getElementById("badgeList");
@@ -12,17 +26,14 @@ function createBadgeElement(badgeJson, badgeId) {
         var badge = document.createElement("div");
         badge.id = badgeId.toString();
         badge.classList.add("badge-item");
-        badge.onclick = function () { toggleSendForm(badge) }
+        badge.addEventListener("click", function () {
+            selectBadge(badge.id);
+        })
         badge.innerHTML = `
 <h1 class="badge-header"> ${badgeJson.name}</h1>
 <div class="badge-image" style="background-image: url(${badgeJson.image})"></div>
 <p class="badge-balance">(${balance})</p>
 <p class="badge-description">${badgeJson.description}</p>
-<form id="sendBadgeForm" class="send-badge-form">
-<hr>
-<input class="input-field" type="text" placeholder="address" autofocus></label>
-<button type="button" onclick="sendBadge(${badgeId})" class="send-badge-btn">SEND</button>
-</form>
 `
         list.appendChild(badge)
     });
@@ -117,7 +128,7 @@ async function onConnect(provider) {
         accounts = await web3.eth.getAccounts();
         contract = await new web3.eth.Contract(contractJson.abi, contractJson.networks[4].address);
         isCreator = await contract.methods.creators(accounts[0]).call();
-        if(!isCreator) {
+        if (!isCreator) {
             location.href - 'student-page.html';
         }
         setHeaderInfo();
@@ -127,18 +138,18 @@ async function onConnect(provider) {
 
 document.addEventListener('DOMContentLoaded', init)
 
-function toggleSendForm(badge) {
-    var show = badge.lastElementChild.style.display;
-    if (show == "none") {
-        badge.lastElementChild.style.display = "block"
-        badge.lastElementChild.children[1].firstElementChild.focus();
-    } else {
-        badge.lastElementChild.style.display = "none"
-    }
-}
+function sendBadge() {
+    var address = document.getElementById("addressInput");
+    var badge = document.getElementsByClassName("badge-selected");
 
-function sendBadge(badgeId) {
-    var address = document.getElementById(badgeId).lastElementChild[0].value;
-    //or something like this
-    contract.methods.mint(badgeId, address).send({ from: accounts[0] })
+    if (web3.utils.isAddress(address.value)) {
+        if (badge.id !== undefined) {
+            contract.methods.mint(badge.id, address).send({ from: accounts[0] })
+        } else {
+            alert("no badge id given")
+        }
+    } else {
+        alert("no valid address")
+    }
+
 }
