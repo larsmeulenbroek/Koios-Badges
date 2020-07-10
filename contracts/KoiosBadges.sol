@@ -76,7 +76,7 @@ contract KoiosBadges is IERC1155, ERC165, CommonConstants, ERC1155Metadata_URI, 
     // Batch mint tokens. Assign directly to _to[].
     function mint(uint256 _id, address _to) public tokenCreatorOnly(_id) {
 
-        balances[_id][_to].add(1);
+        balances[_id][_to] = balances[_id][_to].add(1);
         emit TransferSingle(msg.sender, address(0x0), _to, _id, 1);
 
         if (_to.isContract()) {
