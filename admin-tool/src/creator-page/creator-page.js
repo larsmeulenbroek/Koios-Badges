@@ -109,7 +109,7 @@ async function init() {
     web3modal = new Web3Modal.default({
         network: "rinkeby",
         providerOptions,
-        theme: "dark"
+        theme: "dark" 
     });
 
     web3modal.toggleModal();
