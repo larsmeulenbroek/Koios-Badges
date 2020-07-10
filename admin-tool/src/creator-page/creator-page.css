@@ -159,6 +159,11 @@ body {
     transition: 200ms;
 }
 
+.send-badge-input-field {
+    width: 400px;
+    height: 200px;
+}
+
 .input-field:focus {
     border: 1px solid rgba(19, 196, 163, 0.9);
 }
