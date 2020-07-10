@@ -90,7 +90,7 @@ async function createBadge() {
     }
 
     // TODO: send url to newly created badge
-    await contract.methods.create(10).send({from: accounts[0]})
+    await contract.methods.create(10, uri).send({from: accounts[0]})
 }
 
 function log(str) {
