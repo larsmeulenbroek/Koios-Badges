@@ -57,7 +57,6 @@ async function getBadges() {
     console.log(contract);
     var totalBadges = await contract.methods.nonce().call();
 
-    console.log(totalBadges);
     for (var i = 1; i <= totalBadges; i++) {
         var tokenCreator = await contract.methods.tokenCreator(i).call();
         // check if current account is the creator of the tokens
@@ -136,14 +135,13 @@ async function onConnect(provider) {
 
 document.addEventListener('DOMContentLoaded', init)
 
-function sendBadge() {
+async function sendBadge() {
     var address = document.getElementById("addressInput");
     var badge = document.getElementsByClassName("badge-selected");
-    console.log(badge[0].id);
 
     if (web3.utils.isAddress(address.value)) {
         if (badge[0].id !== undefined) {
-            contract.methods.mint(badge.id, address).send({from: accounts[0]})
+            await contract.methods.mint(badge[0].id, address.value).send({from: accounts[0]});
         } else {
             alert("No badge id given")
         }
