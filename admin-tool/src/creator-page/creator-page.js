@@ -15,8 +15,6 @@ function selectBadge(selectedId) {
             badge.classList.add("badge-selected");
         }
     })
-
-
 }
 
 function createBadgeElement(badgeJson, badgeId) {
@@ -59,6 +57,7 @@ async function getBadges() {
     console.log(contract);
     var totalBadges = await contract.methods.nonce().call();
 
+    console.log(totalBadges);
     for (var i = 1; i <= totalBadges; i++) {
         var tokenCreator = await contract.methods.tokenCreator(i).call();
         // check if current account is the creator of the tokens
@@ -75,22 +74,21 @@ async function setHeaderInfo() {
 }
 
 async function createBadge() {
-    const form = document.getElementById("createBadgeForm");
-    var newBadge = {};
-    for (var i = 0; i < form.children.length - 1; i++) {
-        if (form[i].localName == "input") {
-            var key = form[i].id
-            var value = form[i].value
-            newBadge[key] = value;
-        }
-    }
+    // const form = document.getElementById("createBadgeForm");
+    // var newBadge = {};
+    // for (var i = 0; i < form.children.length - 1; i++) {
+    //     if (form[i].localName == "input") {
+    //         var key = form[i].id
+    //         var value = form[i].value
+    //         newBadge[key] = value;
+    //     }
+    // }
+    //
+    // for await (const result of ipfs.add(JSON.stringify(newBadge))) {
+    //     console.log(result.path);
+    // }
 
-    for await (const result of ipfs.add(JSON.stringify(newBadge))) {
-        console.log(result.path);
-    }
-
-    // TODO: send url to newly created badge
-    await contract.methods.create(10, uri).send({from: accounts[0]})
+    await contract.methods.create(10).send({from: accounts[0]})
 }
 
 function log(str) {
@@ -107,7 +105,7 @@ providerOptions = {
 };
 
 async function init() {
-    ipfs = await window.Ipfs.create();
+    // ipfs = await window.Ipfs.create();
 
     web3modal = new Web3Modal.default({
         network: "rinkeby",
@@ -144,12 +142,12 @@ function sendBadge() {
 
     if (web3.utils.isAddress(address.value)) {
         if (badge.id !== undefined) {
-            contract.methods.mint(badge.id, address).send({ from: accounts[0] })
+            contract.methods.mint(badge.id, address).send({from: accounts[0]})
         } else {
-            alert("no badge id given")
+            alert("No badge id given")
         }
     } else {
-        alert("no valid address")
+        alert("No valid address")
     }
 
 }
