@@ -139,9 +139,10 @@ document.addEventListener('DOMContentLoaded', init)
 function sendBadge() {
     var address = document.getElementById("addressInput");
     var badge = document.getElementsByClassName("badge-selected");
+    console.log(badge[0].id);
 
     if (web3.utils.isAddress(address.value)) {
-        if (badge.id !== undefined) {
+        if (badge[0].id !== undefined) {
             contract.methods.mint(badge.id, address).send({from: accounts[0]})
         } else {
             alert("No badge id given")
@@ -149,5 +150,4 @@ function sendBadge() {
     } else {
         alert("No valid address")
     }
-
 }
