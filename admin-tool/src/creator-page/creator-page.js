@@ -111,7 +111,7 @@ async function init() {
     web3modal = new Web3Modal.default({
         network: "rinkeby",
         providerOptions,
-        theme: "dark"
+        theme: "dark" 
     });
 
     web3modal.toggleModal();
@@ -139,16 +139,21 @@ async function onConnect(provider) {
 document.addEventListener('DOMContentLoaded', init)
 
 async function sendBadge() {
-    var address = document.getElementById("addressInput");
+    var addressess = document.getElementById("addressInput");
     var badge = document.getElementsByClassName("badge-selected");
 
-    if (web3.utils.isAddress(address.value)) {
-        if (badge[0].id !== undefined) {
-            await contract.methods.mint(badge[0].id, address.value).send({from: accounts[0]});
-        } else {
-            alert("No badge id given")
+    addressess = addressess.value.split('\n');
+
+    addressess.forEach((address) => {
+        if (!web3.utils.isAddress(address)) {
+            alert(`${address} is not a valid address`);
+            return;
         }
+    });
+    
+    if (badge.length !== 0) {
+        await contract.methods.sendBadges(badge[0].id, addressess).send({from: accounts[0]});
     } else {
-        alert("No valid address")
+        alert("No badge selected")
     }
 }

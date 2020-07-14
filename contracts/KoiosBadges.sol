@@ -73,6 +73,14 @@ contract KoiosBadges is IERC1155, ERC165, CommonConstants, ERC1155Metadata_URI, 
         emit TransferSingle(msg.sender, address(0x0), msg.sender, _id, _initialSupply);
     }
 
+    function sendBadges(uint256 _id, address[] memory _toAddressess) public tokenCreatorOnly(_id) {
+        uint arrayLength = _toAddressess.length;
+
+        for (uint i = 0; i < arrayLength; i++) {
+            mint(_id, _toAddressess[i]);
+        }
+    }
+
     // Batch mint tokens. Assign directly to _to[].
     function mint(uint256 _id, address _to) public tokenCreatorOnly(_id) {
 
