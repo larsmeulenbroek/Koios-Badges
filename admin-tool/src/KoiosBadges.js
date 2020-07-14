@@ -24159,12 +24159,12 @@ const contractJson = {
         }
       },
       "links": {},
-      "address": "0x02bC003E7d7e08FbfE6d12747Ef5e4bd1075F15D",
-      "transactionHash": "0xd111bca969164ee78593fcdeefe41479dceee43be0750633ce17b0dd986cdab6"
+      "address": "0xE898f6F759820703A115d3e61250247001f0a128",
+      "transactionHash": "0xb0c3f16502f4ec2f7a4ae9e70fb98dc2238a56519e277d9f4e711108aa05959f"
     }
   },
   "schemaVersion": "3.2.0",
-  "updatedAt": "2020-07-10T08:14:39.734Z",
+  "updatedAt": "2020-07-14T18:37:26.081Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {
