@@ -14,7 +14,9 @@ function selectBadge(selectedId) {
         } else {
             badge.classList.add("badge-selected");
         }
-    })
+    });
+
+    document.getElementById("sendBadgeForm").style.display = 'block'
 }
 
 function createBadgeElement(badgeJson, badgeId) {
@@ -125,8 +127,9 @@ async function onConnect(provider) {
         accounts = await web3.eth.getAccounts();
         contract = await new web3.eth.Contract(contractJson.abi, contractJson.networks[4].address);
         isCreator = await contract.methods.creators(accounts[0]).call();
+
         if (!isCreator) {
-            location.href - 'student-page.html';
+            location.href = 'student-page.html';
         }
         setHeaderInfo();
         getBadges();
