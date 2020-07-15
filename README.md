@@ -16,6 +16,7 @@ With the limited time we created a simple app where badges can be created and vi
 * Badges to be added to forum, so that users know who completed certain tasks and who doesnt
 * Administrator tool who can control the creators (add creators/ remove creators)
 * Store badge json data on ipfs
-
+* Teacher(creator) permissions
+* Remove badges
 
 

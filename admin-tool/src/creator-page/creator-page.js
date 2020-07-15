@@ -37,7 +37,6 @@ function createBadgeElement(badgeJson, badgeId) {
 `
         list.appendChild(badge)
     });
-
 }
 
 function getBadgeContent(url, badgeId) {
@@ -56,7 +55,6 @@ function getBadgeContent(url, badgeId) {
 }
 
 async function getBadges() {
-    console.log(contract);
     var totalBadges = await contract.methods.nonce().call();
 
     for (var i = 1; i <= totalBadges; i++) {
